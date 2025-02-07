@@ -3,6 +3,7 @@ import { Message } from "@/types/chat";
 import { ChatMessage } from "@/components/ChatMessage";
 import { ChatInput } from "@/components/ChatInput";
 import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -15,14 +16,18 @@ const Index = () => {
       const newMessage: Message = { role: "user", content };
       setMessages((prev) => [...prev, newMessage]);
 
-      // Here we'll add the API call to Gemini later
-      const response = "This is a placeholder response. Please add your Gemini API key to enable AI responses.";
-      
+      const { data, error } = await supabase.functions.invoke('chat-with-gemini', {
+        body: { messages: [...messages, newMessage] },
+      });
+
+      if (error) throw error;
+
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: response },
+        { role: "assistant", content: data.response },
       ]);
     } catch (error) {
+      console.error('Error:', error);
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
@@ -36,11 +41,11 @@ const Index = () => {
   return (
     <div className="flex h-screen flex-col relative overflow-hidden">
       {/* Animated gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-mai-light via-mai to-mai-dark animate-gradient-x z-0" />
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-400/30 via-pink-400/30 to-blue-400/30 animate-gradient-x z-0" />
       
       <header className="relative z-10 flex items-center justify-between border-b bg-white/80 backdrop-blur-sm px-6 py-4">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-mai text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-purple-500 text-white">
             M
           </div>
           <h1 className="text-xl font-semibold">MAI Chat</h1>
