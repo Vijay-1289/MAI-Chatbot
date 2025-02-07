@@ -67,10 +67,21 @@ export default {
           "0%": { width: "0%" },
           "100%": { width: "100%" },
         },
+        "gradient-x": {
+          "0%, 100%": {
+            "background-size": "200% 200%",
+            "background-position": "left center",
+          },
+          "50%": {
+            "background-size": "200% 200%",
+            "background-position": "right center",
+          },
+        },
       },
       animation: {
         "message-fade-in": "message-fade-in 0.3s ease-out forwards",
         "typing": "typing 1s ease-out infinite",
+        "gradient-x": "gradient-x 15s ease infinite",
       },
       borderRadius: {
         lg: "var(--radius)",

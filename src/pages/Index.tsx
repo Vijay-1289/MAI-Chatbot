@@ -34,8 +34,11 @@ const Index = () => {
   };
 
   return (
-    <div className="flex h-screen flex-col bg-gray-50">
-      <header className="flex items-center justify-between border-b bg-white px-6 py-4">
+    <div className="flex h-screen flex-col relative overflow-hidden">
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-mai-light via-mai to-mai-dark animate-gradient-x z-0" />
+      
+      <header className="relative z-10 flex items-center justify-between border-b bg-white/80 backdrop-blur-sm px-6 py-4">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-md bg-mai text-white">
             M
@@ -44,7 +47,7 @@ const Index = () => {
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto">
+      <main className="relative z-10 flex-1 overflow-y-auto bg-white/50 backdrop-blur-sm">
         <div className="mx-auto max-w-3xl space-y-4 p-4">
           {messages.length === 0 ? (
             <div className="flex h-full items-center justify-center">
