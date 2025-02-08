@@ -40,8 +40,17 @@ export const FileUpload = ({ onContentExtracted }: FileUploadProps) => {
 
     if (!file || !allowedTypes.includes(file.type)) {
       toast({
-        title: "Error",
+        title: "Wrong file type 😅",
         description: "Please upload a text or PDF file",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) { // 10MB limit
+      toast({
+        title: "File too large 😮",
+        description: "Please upload a file smaller than 10MB",
         variant: "destructive",
       });
       return;
@@ -60,15 +69,15 @@ export const FileUpload = ({ onContentExtracted }: FileUploadProps) => {
 
       onContentExtracted(data.content);
       toast({
-        title: "Success",
-        description: "File content extracted successfully!",
+        title: "File uploaded! 🎉",
+        description: "Content extracted successfully! ✨",
         className: "bg-green-500 text-white",
       });
     } catch (error) {
       console.error('Error:', error);
       toast({
-        title: "Error",
-        description: "Failed to process file. Please try again.",
+        title: "Oops! Something went wrong 😔",
+        description: "Please try again with a different file",
         variant: "destructive",
       });
     } finally {
@@ -90,13 +99,23 @@ export const FileUpload = ({ onContentExtracted }: FileUploadProps) => {
         accept=".txt,.pdf"
         onChange={handleFileInput}
         className="absolute inset-0 cursor-pointer opacity-0"
+        disabled={isUploading}
       />
       <div className="flex flex-col items-center justify-center space-y-2">
-        <UploadCloud className={`h-8 w-8 ${isUploading ? 'animate-bounce' : ''} text-purple-500`} />
+        <div className={`relative ${isUploading ? 'animate-bounce' : ''}`}>
+          <UploadCloud className="h-8 w-8 text-purple-500" />
+          {isUploading && (
+            <span className="absolute -right-2 -top-2 text-lg">
+              ✨
+            </span>
+          )}
+        </div>
         <p className="text-sm text-gray-600">
-          {isUploading ? 'Processing...' : 'Drop your file here or click to upload'}
+          {isUploading ? '📝 Processing...' : '🎯 Drop your file here or click to upload'}
         </p>
-        <p className="text-xs text-gray-500">Supports TXT and PDF</p>
+        <p className="text-xs text-gray-500">
+          {isUploading ? '✨ Magic happening...' : '📄 Supports TXT and PDF (max 10MB)'}
+        </p>
       </div>
     </div>
   );

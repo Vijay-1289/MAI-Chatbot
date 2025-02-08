@@ -19,6 +19,13 @@ const Index = () => {
       const newMessage: Message = { role: "user", content };
       setMessages((prev) => [...prev, newMessage]);
 
+      // Show thinking animation toast
+      toast({
+        title: "🤔 Thinking...",
+        description: "Processing your message ✨",
+        className: "bg-purple-500 text-white",
+      });
+
       const { data, error } = await supabase.functions.invoke('chat-with-gemini', {
         body: { messages: [...messages, newMessage] },
       });
@@ -30,16 +37,17 @@ const Index = () => {
         { role: "assistant", content: data.response },
       ]);
 
+      // Show success toast with celebration
       toast({
-        title: "Response received! 🎉",
-        description: "Check out the AI's response below",
+        title: "🎉 Response received!",
+        description: "Check out the magic below ✨",
         className: "bg-purple-500 text-white",
       });
     } catch (error) {
       console.error('Error:', error);
       toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
+        title: "😔 Oops!",
+        description: "Something went wrong. Let's try again!",
         variant: "destructive",
       });
     } finally {
@@ -53,23 +61,24 @@ const Index = () => {
 
   return (
     <div className="flex h-screen flex-col relative overflow-hidden">
-      {/* Aurora lights background effect */}
+      {/* Aurora lights background effect with enhanced animation */}
       <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-blue-500/20 to-green-500/20 animate-aurora" />
-        <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-purple-500/10 to-pink-500/10 animate-aurora-reverse" />
-        <div className="absolute inset-0 bg-gradient-to-bl from-green-500/10 via-blue-500/10 to-purple-500/10 animate-aurora-slow" />
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/30 via-blue-500/30 to-green-500/30 animate-aurora opacity-70" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-aurora-reverse opacity-60" />
+        <div className="absolute inset-0 bg-gradient-to-bl from-green-500/20 via-blue-500/20 to-purple-500/20 animate-aurora-slow opacity-50" />
       </div>
       
       <header className="relative z-10 flex items-center justify-between border-b bg-white/80 backdrop-blur-sm px-6 py-4">
         <div className="flex items-center gap-2">
           <motion.div
-            whileHover={{ scale: 1.1 }}
+            whileHover={{ scale: 1.1, rotate: 360 }}
             whileTap={{ scale: 0.9 }}
+            transition={{ duration: 0.5 }}
             className="flex h-8 w-8 items-center justify-center rounded-md bg-purple-500 text-white"
           >
             <Sparkles className="h-5 w-5" />
           </motion.div>
-          <h1 className="text-xl font-semibold">MAI Chat</h1>
+          <h1 className="text-xl font-semibold">MAI Chat ✨</h1>
         </div>
       </header>
 
@@ -83,7 +92,9 @@ const Index = () => {
                 exit={{ opacity: 0, y: -20 }}
                 className="flex flex-col items-center justify-center space-y-4 p-8"
               >
-                <p className="text-gray-500">Start a conversation with MAI!</p>
+                <p className="text-gray-500">
+                  ✨ Start a magical conversation with MAI! 🌟
+                </p>
               </motion.div>
             ) : (
               messages.map((message, i) => (
