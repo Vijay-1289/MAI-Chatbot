@@ -77,11 +77,44 @@ export default {
             "background-position": "right center",
           },
         },
+        "aurora": {
+          "0%, 100%": {
+            transform: "translate(0, 0) scale(1)",
+            opacity: "0.5"
+          },
+          "50%": {
+            transform: "translate(-5%, 5%) scale(1.1)",
+            opacity: "0.7"
+          }
+        },
+        "aurora-reverse": {
+          "0%, 100%": {
+            transform: "translate(0, 0) scale(1.1)",
+            opacity: "0.6"
+          },
+          "50%": {
+            transform: "translate(5%, -5%) scale(1)",
+            opacity: "0.4"
+          }
+        },
+        "aurora-slow": {
+          "0%, 100%": {
+            transform: "translate(0, 0) scale(1.05)",
+            opacity: "0.5"
+          },
+          "50%": {
+            transform: "translate(-3%, 3%) scale(1)",
+            opacity: "0.3"
+          }
+        }
       },
       animation: {
         "message-fade-in": "message-fade-in 0.3s ease-out forwards",
         "typing": "typing 1s ease-out infinite",
         "gradient-x": "gradient-x 15s ease infinite",
+        "aurora": "aurora 15s ease infinite",
+        "aurora-reverse": "aurora-reverse 20s ease infinite",
+        "aurora-slow": "aurora-slow 25s ease infinite"
       },
       borderRadius: {
         lg: "var(--radius)",

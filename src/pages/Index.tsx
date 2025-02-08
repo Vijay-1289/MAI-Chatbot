@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Message } from "@/types/chat";
 import { ChatMessage } from "@/components/ChatMessage";
 import { ChatInput } from "@/components/ChatInput";
-import { FileUpload } from "@/components/FileUpload";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
@@ -31,7 +30,6 @@ const Index = () => {
         { role: "assistant", content: data.response },
       ]);
 
-      // Celebration animation
       toast({
         title: "Response received! 🎉",
         description: "Check out the AI's response below",
@@ -55,17 +53,12 @@ const Index = () => {
 
   return (
     <div className="flex h-screen flex-col relative overflow-hidden">
-      {/* Enhanced gradient background with animation */}
-      <motion.div
-        animate={{
-          background: [
-            "linear-gradient(to right, rgba(167, 139, 250, 0.1), rgba(139, 92, 246, 0.1))",
-            "linear-gradient(to right, rgba(139, 92, 246, 0.1), rgba(167, 139, 250, 0.1))",
-          ],
-        }}
-        transition={{ duration: 5, repeat: Infinity, repeatType: "reverse" }}
-        className="absolute inset-0 z-0"
-      />
+      {/* Aurora lights background effect */}
+      <div className="fixed inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-blue-500/20 to-green-500/20 animate-aurora" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-purple-500/10 to-pink-500/10 animate-aurora-reverse" />
+        <div className="absolute inset-0 bg-gradient-to-bl from-green-500/10 via-blue-500/10 to-purple-500/10 animate-aurora-slow" />
+      </div>
       
       <header className="relative z-10 flex items-center justify-between border-b bg-white/80 backdrop-blur-sm px-6 py-4">
         <div className="flex items-center gap-2">
@@ -91,25 +84,27 @@ const Index = () => {
                 className="flex flex-col items-center justify-center space-y-4 p-8"
               >
                 <p className="text-gray-500">Start a conversation with MAI!</p>
-                <FileUpload onContentExtracted={handleFileContent} />
               </motion.div>
             ) : (
-              <>
-                {messages.map((message, i) => (
-                  <ChatMessage
-                    key={i}
-                    message={message}
-                    isLast={i === messages.length - 1}
-                  />
-                ))}
-                <FileUpload onContentExtracted={handleFileContent} />
-              </>
+              messages.map((message, i) => (
+                <ChatMessage
+                  key={i}
+                  message={message}
+                  isLast={i === messages.length - 1}
+                />
+              ))
             )}
           </AnimatePresence>
         </div>
       </main>
 
-      <ChatInput onSend={handleSendMessage} disabled={isLoading} />
+      <div className="relative z-10">
+        <ChatInput 
+          onSend={handleSendMessage} 
+          onFileContent={handleFileContent}
+          disabled={isLoading} 
+        />
+      </div>
     </div>
   );
 };

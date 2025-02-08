@@ -39,9 +39,66 @@
   }
 }
 
+@keyframes aurora {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-5%, 5%) scale(1.1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.5;
+  }
+}
+
+@keyframes aurora-reverse {
+  0% {
+    transform: translate(0, 0) scale(1.1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(5%, -5%) scale(1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate(0, 0) scale(1.1);
+    opacity: 0.6;
+  }
+}
+
+@keyframes aurora-slow {
+  0% {
+    transform: translate(0, 0) scale(1.05);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-3%, 3%) scale(1);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translate(0, 0) scale(1.05);
+    opacity: 0.5;
+  }
+}
+
 .animate-gradient-x {
   animation: gradient-x 15s ease infinite;
   background-size: 400% 400%;
+}
+
+.animate-aurora {
+  animation: aurora 15s ease infinite;
+}
+
+.animate-aurora-reverse {
+  animation: aurora-reverse 20s ease infinite;
+}
+
+.animate-aurora-slow {
+  animation: aurora-slow 25s ease infinite;
 }
 
 @media (prefers-reduced-motion: no-preference) {
