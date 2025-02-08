@@ -20,17 +20,34 @@ const Index = () => {
       setMessages((prev) => [...prev, newMessage]);
 
       // Show thinking animation toast
-      toast({
+      const thinkingToast = toast({
         title: "🤔 Thinking...",
         description: "Processing your message ✨",
         className: "bg-purple-500 text-white",
+        duration: 100000, // Long duration that we'll dismiss manually
       });
 
       const { data, error } = await supabase.functions.invoke('chat-with-gemini', {
         body: { messages: [...messages, newMessage] },
       });
 
-      if (error) throw error;
+      // Dismiss the thinking toast
+      toast.dismiss(thinkingToast);
+
+      if (error) {
+        // Check if it's a rate limit error (status 429)
+        if (error.status === 429) {
+          toast({
+            title: "⏳ Taking a breather!",
+            description: "We've hit our limit. Please try again in a few minutes! 🌟",
+            variant: "destructive",
+            duration: 5000,
+          });
+          return;
+        }
+        
+        throw error;
+      }
 
       setMessages((prev) => [
         ...prev,
@@ -47,7 +64,7 @@ const Index = () => {
       console.error('Error:', error);
       toast({
         title: "😔 Oops!",
-        description: "Something went wrong. Let's try again!",
+        description: "Something magical went wrong. Let's try again! ✨",
         variant: "destructive",
       });
     } finally {
