@@ -1,9 +1,13 @@
+
 import { useState } from "react";
 import { Message } from "@/types/chat";
 import { ChatMessage } from "@/components/ChatMessage";
 import { ChatInput } from "@/components/ChatInput";
+import { FileUpload } from "@/components/FileUpload";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { motion, AnimatePresence } from "framer-motion";
+import { Sparkles } from "lucide-react";
 
 const Index = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -26,6 +30,13 @@ const Index = () => {
         ...prev,
         { role: "assistant", content: data.response },
       ]);
+
+      // Celebration animation
+      toast({
+        title: "Response received! 🎉",
+        description: "Check out the AI's response below",
+        className: "bg-purple-500 text-white",
+      });
     } catch (error) {
       console.error('Error:', error);
       toast({
@@ -38,35 +49,63 @@ const Index = () => {
     }
   };
 
+  const handleFileContent = (content: string) => {
+    handleSendMessage(`Please analyze this content: ${content}`);
+  };
+
   return (
     <div className="flex h-screen flex-col relative overflow-hidden">
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-400/30 via-pink-400/30 to-blue-400/30 animate-gradient-x z-0" />
+      {/* Enhanced gradient background with animation */}
+      <motion.div
+        animate={{
+          background: [
+            "linear-gradient(to right, rgba(167, 139, 250, 0.1), rgba(139, 92, 246, 0.1))",
+            "linear-gradient(to right, rgba(139, 92, 246, 0.1), rgba(167, 139, 250, 0.1))",
+          ],
+        }}
+        transition={{ duration: 5, repeat: Infinity, repeatType: "reverse" }}
+        className="absolute inset-0 z-0"
+      />
       
       <header className="relative z-10 flex items-center justify-between border-b bg-white/80 backdrop-blur-sm px-6 py-4">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-purple-500 text-white">
-            M
-          </div>
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="flex h-8 w-8 items-center justify-center rounded-md bg-purple-500 text-white"
+          >
+            <Sparkles className="h-5 w-5" />
+          </motion.div>
           <h1 className="text-xl font-semibold">MAI Chat</h1>
         </div>
       </header>
 
-      <main className="relative z-10 flex-1 overflow-y-auto bg-white/50 backdrop-blur-sm">
+      <main className="relative z-10 flex-1 overflow-y-auto">
         <div className="mx-auto max-w-3xl space-y-4 p-4">
-          {messages.length === 0 ? (
-            <div className="flex h-full items-center justify-center">
-              <p className="text-gray-500">Start a conversation with MAI!</p>
-            </div>
-          ) : (
-            messages.map((message, i) => (
-              <ChatMessage
-                key={i}
-                message={message}
-                isLast={i === messages.length - 1}
-              />
-            ))
-          )}
+          <AnimatePresence>
+            {messages.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="flex flex-col items-center justify-center space-y-4 p-8"
+              >
+                <p className="text-gray-500">Start a conversation with MAI!</p>
+                <FileUpload onContentExtracted={handleFileContent} />
+              </motion.div>
+            ) : (
+              <>
+                {messages.map((message, i) => (
+                  <ChatMessage
+                    key={i}
+                    message={message}
+                    isLast={i === messages.length - 1}
+                  />
+                ))}
+                <FileUpload onContentExtracted={handleFileContent} />
+              </>
+            )}
+          </AnimatePresence>
         </div>
       </main>
 
