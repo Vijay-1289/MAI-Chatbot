@@ -20,7 +20,7 @@ const Index = () => {
       setMessages((prev) => [...prev, newMessage]);
 
       // Show thinking animation toast
-      const thinkingToast = toast({
+      const toastId = toast({
         title: "🤔 Thinking...",
         description: "Processing your message ✨",
         className: "bg-purple-500 text-white",
@@ -31,8 +31,11 @@ const Index = () => {
         body: { messages: [...messages, newMessage] },
       });
 
-      // Dismiss the thinking toast
-      toast.dismiss(thinkingToast);
+      // Dismiss the thinking toast using the id
+      toast({
+        id: toastId.id,
+        duration: 0,
+      });
 
       if (error) {
         // Check if it's a rate limit error (status 429)
@@ -72,10 +75,6 @@ const Index = () => {
     }
   };
 
-  const handleFileContent = (content: string) => {
-    handleSendMessage(`Please analyze this content: ${content}`);
-  };
-
   return (
     <div className="flex h-screen flex-col relative overflow-hidden">
       {/* Aurora lights background effect with enhanced animation */}
@@ -109,9 +108,13 @@ const Index = () => {
                 exit={{ opacity: 0, y: -20 }}
                 className="flex flex-col items-center justify-center space-y-4 p-8"
               >
-                <p className="text-gray-500">
+                <motion.p 
+                  className="text-gray-500"
+                  animate={{ scale: [1, 1.05, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
                   ✨ Start a magical conversation with MAI! 🌟
-                </p>
+                </motion.p>
               </motion.div>
             ) : (
               messages.map((message, i) => (
@@ -128,8 +131,7 @@ const Index = () => {
 
       <div className="relative z-10">
         <ChatInput 
-          onSend={handleSendMessage} 
-          onFileContent={handleFileContent}
+          onSend={handleSendMessage}
           disabled={isLoading} 
         />
       </div>

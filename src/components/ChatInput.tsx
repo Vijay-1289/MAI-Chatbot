@@ -1,19 +1,16 @@
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { SendHorizontal, Upload } from "lucide-react";
+import { SendHorizontal } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-import { FileUpload } from "./FileUpload";
 
 interface ChatInputProps {
   onSend: (message: string) => void;
-  onFileContent: (content: string) => void;
   disabled?: boolean;
 }
 
-export const ChatInput = ({ onSend, onFileContent, disabled }: ChatInputProps) => {
+export const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
   const [input, setInput] = useState("");
-  const [showUpload, setShowUpload] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -43,16 +40,6 @@ export const ChatInput = ({ onSend, onFileContent, disabled }: ChatInputProps) =
   return (
     <div className="relative">
       <div className="flex items-end gap-2 border-t bg-white/80 backdrop-blur-sm p-4">
-        <Button
-          onClick={() => setShowUpload(!showUpload)}
-          className="h-10 w-10 rounded-full bg-purple-500 p-2 hover:bg-purple-600 relative group"
-          type="button"
-        >
-          <Upload className="h-4 w-4 text-white" />
-          <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-purple-100 text-purple-600 px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            📄 Upload file
-          </span>
-        </Button>
         <Textarea
           ref={textareaRef}
           value={input}
@@ -66,7 +53,7 @@ export const ChatInput = ({ onSend, onFileContent, disabled }: ChatInputProps) =
         <Button
           onClick={handleSubmit}
           disabled={disabled || !input.trim()}
-          className="h-10 w-10 rounded-full bg-purple-500 p-2 hover:bg-purple-600 relative group"
+          className="h-10 w-10 rounded-full bg-purple-500 p-2 hover:bg-purple-600 relative group transition-all duration-300 ease-in-out transform hover:scale-105"
         >
           <SendHorizontal className="h-4 w-4 text-white" />
           <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-purple-100 text-purple-600 px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -74,11 +61,6 @@ export const ChatInput = ({ onSend, onFileContent, disabled }: ChatInputProps) =
           </span>
         </Button>
       </div>
-      {showUpload && (
-        <div className="absolute bottom-full w-full mb-2">
-          <FileUpload onContentExtracted={onFileContent} />
-        </div>
-      )}
     </div>
   );
 };
